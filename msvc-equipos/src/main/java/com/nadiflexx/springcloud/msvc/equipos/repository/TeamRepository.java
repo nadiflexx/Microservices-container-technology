@@ -1,7 +1,7 @@
 package com.nadiflexx.springcloud.msvc.equipos.repository;
 
 
-import com.nadiflexx.springcloud.msvc.equipos.entity.Team;
+import com.nadiflexx.springcloud.msvc.equipos.models.entity.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

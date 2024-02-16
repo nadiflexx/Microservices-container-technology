@@ -11,10 +11,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Builder
 @Table(name = "user")
 public class User {
 

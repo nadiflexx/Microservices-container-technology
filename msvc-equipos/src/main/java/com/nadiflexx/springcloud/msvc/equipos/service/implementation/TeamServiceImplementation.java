@@ -1,7 +1,10 @@
 package com.nadiflexx.springcloud.msvc.equipos.service.implementation;
 
-import com.nadiflexx.springcloud.msvc.equipos.entity.Team;
+import com.nadiflexx.springcloud.msvc.equipos.clients.UserClientRest;
+import com.nadiflexx.springcloud.msvc.equipos.models.User;
+import com.nadiflexx.springcloud.msvc.equipos.models.entity.Team;
 import com.nadiflexx.springcloud.msvc.equipos.exceptions.DataNotFoundException;
+import com.nadiflexx.springcloud.msvc.equipos.models.entity.TeamUser;
 import com.nadiflexx.springcloud.msvc.equipos.repository.TeamRepository;
 import com.nadiflexx.springcloud.msvc.equipos.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,9 @@ public class TeamServiceImplementation implements TeamService {
 
     @Autowired
     private TeamRepository repository;
+
+    @Autowired
+    private UserClientRest clientRest;
 
     @Override
     @Transactional
@@ -46,7 +52,63 @@ public class TeamServiceImplementation implements TeamService {
     }
 
     @Override
-    public boolean findUser(Long id) {
-        return true;
+    @Transactional
+    public Optional<User> asignUser(User user, Long teamId) {
+        Optional<Team> teamRepository = repository.findById(teamId);
+
+        if (teamRepository.isPresent()) {
+            User userService = clientRest.getUserById(user.getId());
+
+            Team team = teamRepository.get();
+            TeamUser teamUser = new TeamUser();
+            teamUser.setUserId(userService.getId());
+
+            team.addTeamUser(teamUser);
+            repository.save(team);
+
+            return Optional.of(userService);
+        }
+        return Optional.empty();
     }
+
+    @Override
+    @Transactional
+    public Optional<User> createUser(User user, Long teamId) {
+        Optional<Team> teamRepository = repository.findById(teamId);
+
+        if (teamRepository.isPresent()) {
+            User newUserService = clientRest.save(user);
+
+            Team team = teamRepository.get();
+            TeamUser teamUser = new TeamUser();
+            teamUser.setUserId(newUserService.getId());
+
+            team.addTeamUser(teamUser);
+            repository.save(team);
+
+            return Optional.of(newUserService);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    @Transactional
+    public Optional<User> deleteUser(User user, Long teamId) {
+        Optional<Team> teamRepository = repository.findById(teamId);
+
+        if (teamRepository.isPresent()) {
+            User newUserService = clientRest.getUserById(user.getId());
+
+            Team team = teamRepository.get();
+            TeamUser teamUser = new TeamUser();
+            teamUser.setUserId(newUserService.getId());
+
+            team.removeTeamUser(teamUser);
+            repository.save(team);
+
+            return Optional.of(newUserService);
+        }
+        return Optional.empty();
+    }
+
 }
