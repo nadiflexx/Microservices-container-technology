@@ -72,4 +72,9 @@ public class UserController {
                 errors.put(fieldError.getField(), "El campo " + fieldError.getField() + " " + fieldError.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errors);
     }
+
+    @GetMapping("/usersByTeam")
+    public ResponseEntity<?> getAllUsersById(@RequestParam List<Long> ids) {
+        return ResponseEntity.ok(service.getAllUsersById(ids));
+    }
 }

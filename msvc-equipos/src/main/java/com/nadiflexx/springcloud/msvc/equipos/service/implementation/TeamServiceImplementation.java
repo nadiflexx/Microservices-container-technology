@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamServiceImplementation implements TeamService {
@@ -107,6 +108,26 @@ public class TeamServiceImplementation implements TeamService {
             repository.save(team);
 
             return Optional.of(newUserService);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    @Transactional
+    public Optional<Team> getTeamByIdWithUsers(Long teamId) {
+        Optional<Team> teamRepository = repository.findById(teamId);
+
+        if (teamRepository.isPresent()) {
+            Team team = teamRepository.get();
+            if (!team.getTeamUsers().isEmpty()) {
+                List<Long> idsUser = team.getTeamUsers().stream().map(TeamUser::getUserId).toList();
+
+                List<User> users = clientRest.getAllUsersById(idsUser);
+
+                team.setUsers(users);
+            }
+            return Optional.of(team);
+
         }
         return Optional.empty();
     }

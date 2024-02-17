@@ -22,4 +22,7 @@ public interface TeamService {
 
     Optional<User> deleteUser(User user, Long teamId);
 
+    Optional<Team> getTeamByIdWithUsers(Long teamId);
+
+
 }

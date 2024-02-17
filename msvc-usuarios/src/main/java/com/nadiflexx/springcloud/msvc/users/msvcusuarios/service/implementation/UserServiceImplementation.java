@@ -49,4 +49,9 @@ public class UserServiceImplementation implements UserService {
     public Optional<User> getUserByEmail(String email) {
         return repository.findByEmail(email);
     }
+
+    @Override
+    public List<User> getAllUsersById(Iterable<Long> ids) {
+        return repository.findAllById(ids);
+    }
 }
