@@ -113,7 +113,7 @@ public class TeamServiceImplementation implements TeamService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<Team> getTeamByIdWithUsers(Long teamId) {
         Optional<Team> teamRepository = repository.findById(teamId);
 
@@ -130,6 +130,12 @@ public class TeamServiceImplementation implements TeamService {
 
         }
         return Optional.empty();
+    }
+
+    @Override
+    @Transactional
+    public void deleteTeamUserByIdUser(Long id) {
+        repository.deleteTeamUserByUserId(id);
     }
 
 }

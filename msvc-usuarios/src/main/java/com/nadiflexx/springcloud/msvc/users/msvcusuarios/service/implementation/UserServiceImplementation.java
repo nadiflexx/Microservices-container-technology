@@ -1,5 +1,6 @@
 package com.nadiflexx.springcloud.msvc.users.msvcusuarios.service.implementation;
 
+import com.nadiflexx.springcloud.msvc.users.msvcusuarios.clients.TeamClientRest;
 import com.nadiflexx.springcloud.msvc.users.msvcusuarios.entity.User;
 import com.nadiflexx.springcloud.msvc.users.msvcusuarios.exceptions.DataNotFoundException;
 import com.nadiflexx.springcloud.msvc.users.msvcusuarios.repository.UserRepository;
@@ -17,6 +18,9 @@ public class UserServiceImplementation implements UserService {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private TeamClientRest client;
 
     @Override
     @Transactional
@@ -43,6 +47,7 @@ public class UserServiceImplementation implements UserService {
     public void deleteUser(Long id) {
         repository.findById(id).orElseThrow(() -> new DataNotFoundException("User not found " + id));
         repository.deleteById(id);
+        client.deleteTeamUser(id);
     }
 
     @Override

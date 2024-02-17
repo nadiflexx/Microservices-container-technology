@@ -24,5 +24,6 @@ public interface TeamService {
 
     Optional<Team> getTeamByIdWithUsers(Long teamId);
 
+    void deleteTeamUserByIdUser(Long id);
 
 }

@@ -114,4 +114,12 @@ public class TeamController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @DeleteMapping("/deleteTeamUser/{teamId}")
+    public ResponseEntity<?> deleteTeamUser(@PathVariable Long teamId) {
+
+        service.deleteTeamUserByIdUser(teamId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
