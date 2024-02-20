@@ -3,10 +3,22 @@
 #admita Docker
 FROM openjdk:17.0.2
 
-WORKDIR /app
+WORKDIR /app/msvc-usuarios
 
-COPY ./target/msvc-usuarios-0.0.1-SNAPSHOT.jar .
+#Copiamos ejecutables .mvn de msvc-usuarios en la carpeta declarada en workdir para agilizar el proceso del build
+COPY ./msvc-usuarios/.mvn ./.mvn
+COPY ./msvc-usuarios/mvnw .
+COPY ./msvc-usuarios/pom.xml .
+
+#Hacer que se salte el test y el main porque no lo necesitamos. Empaquetamos el proyecto sin el código fuente.
+#Eliminamos la carpeta target
+RUN ./mvnw clean package -Dmaven.test.skip -Dmaven.main.skip -Dspring-boot.repackage.skip && rm -r ./target/
+
+COPY ./msvc-usuarios/src ./src
+
+#Generamos el jar en target del WorkDir evitando los tests
+RUN ./mvnw clean package -DskipTests
 
 EXPOSE 8001
 
-ENTRYPOINT ["java", "-jar", "msvc-usuarios-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "./target/msvc-usuarios-0.0.1-SNAPSHOT.jar"]
