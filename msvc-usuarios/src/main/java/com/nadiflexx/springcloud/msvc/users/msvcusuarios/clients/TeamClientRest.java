@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 
-@FeignClient(name = "msvc-equipos", url = "host.docker.internal:8002/teams")
+@FeignClient(name = "msvc-equipos", url = "msvc-equipos:8002/teams")
 public interface TeamClientRest {
 
     @DeleteMapping("/deleteTeamUser/{teamId}")
